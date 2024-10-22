@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const usuarioRoutes_1 = __importDefault(require("./usuarioRoutes"));
+const personaRoutes_1 = __importDefault(require("./personaRoutes"));
+const funcionarioRoutes_1 = __importDefault(require("./funcionarioRoutes"));
+const predioRoutes_1 = __importDefault(require("./predioRoutes"));
+const trampaRoutes_1 = __importDefault(require("./trampaRoutes"));
+const deteccionRoutes_1 = __importDefault(require("./deteccionRoutes"));
+const alertaRoutes_1 = __importDefault(require("./alertaRoutes"));
+const authRoutes_1 = __importDefault(require("./authRoutes"));
+const router = (0, express_1.Router)();
+router.use('/auth', authRoutes_1.default);
+router.use('/usuarios', usuarioRoutes_1.default);
+router.use('/personas', personaRoutes_1.default);
+router.use('/funcionarios', funcionarioRoutes_1.default);
+router.use('/predios', predioRoutes_1.default);
+router.use('/trampas', trampaRoutes_1.default);
+router.use('/detecciones', deteccionRoutes_1.default);
+router.use('/alertas', alertaRoutes_1.default);
+exports.default = router;
