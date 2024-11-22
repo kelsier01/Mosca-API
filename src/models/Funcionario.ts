@@ -13,16 +13,14 @@ const Funcionario = bd.define('funcionarios',{
   },
   rol_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
   },
   estado: {
     type: DataTypes.INTEGER,
-    allowNull: false,
   },
 });
 
-Funcionario.belongsTo(Persona, { foreignKey: 'persona_id' });
-Funcionario.belongsTo(Rol, { foreignKey: 'rol_id' });
+Funcionario.belongsTo(Persona, { foreignKey: 'persona_id', as:'persona'});
+Funcionario.belongsTo(Rol, { foreignKey: 'rol_id', as:'rol' });
 // Funcionario.hasMany(Alerta, { foreignKey: 'funcionario_id' });
 // Funcionario.hasMany(FuncionarioHasTrampa, { foreignKey: 'funcionario_id' });
 

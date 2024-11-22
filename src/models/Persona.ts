@@ -33,7 +33,7 @@ const Persona = bd.define('personas', {
   },
 });
 
-Persona.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Persona.belongsTo(Usuario, { foreignKey: 'usuario_id', as:'usuario'});
 // Persona.hasOne(Duenio, { foreignKey: 'persona_id' });
 // Persona.hasOne(Funcionario, { foreignKey: 'persona_id' });
 

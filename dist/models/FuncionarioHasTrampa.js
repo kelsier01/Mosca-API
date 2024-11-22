@@ -27,7 +27,7 @@ const FuncionarioHasTrampa = connection_1.default.define('funcionarios_has_tramp
         defaultValue: 1,
     },
 });
-FuncionarioHasTrampa.belongsTo(Funcionario_1.default, { foreignKey: 'funcionario_id' });
-FuncionarioHasTrampa.belongsTo(Trampa_1.default, { foreignKey: 'trampa_id' });
-FuncionarioHasTrampa.belongsTo(Rol_1.default, { foreignKey: 'rol_id' });
+FuncionarioHasTrampa.belongsTo(Funcionario_1.default, { as: 'funcionario', foreignKey: 'funcionario_id' });
+FuncionarioHasTrampa.belongsTo(Trampa_1.default, { as: 'trampa', foreignKey: 'trampa_id' });
+FuncionarioHasTrampa.belongsTo(Rol_1.default, { as: 'rol', foreignKey: 'rol_id' });
 exports.default = FuncionarioHasTrampa;

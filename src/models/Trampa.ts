@@ -33,8 +33,8 @@ const Trampa = bd.define('trampas',{
   },
 });
 
-Trampa.belongsTo(Predio, { foreignKey: 'predio_id' });
-Trampa.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Trampa.belongsTo(Predio, { foreignKey: 'predio_id', as:'predio'});
+Trampa.belongsTo(Usuario, { foreignKey: 'usuario_id', as:'usuario' });
 // Trampa.hasMany(Deteccion, { foreignKey: 'trampa_id' });
 // Trampa.hasMany(FuncionarioHasTrampa, { foreignKey: 'trampa_id' });
 

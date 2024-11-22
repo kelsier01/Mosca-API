@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUsuario = exports.putUsuario = exports.postUsuario = exports.getUsuario = exports.getUsuarios = void 0;
+exports.crearUsuario = exports.deleteUsuario = exports.putUsuario = exports.postUsuario = exports.getUsuario = exports.getUsuarios = void 0;
 const Usuario_1 = __importDefault(require("../models/Usuario"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const getUsuarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -102,3 +102,23 @@ const deleteUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.json(usuario);
 });
 exports.deleteUsuario = deleteUsuario;
+const crearUsuario = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const existeEmail = yield Usuario_1.default.findOne({
+            where: {
+                email,
+            },
+        });
+        if (existeEmail) {
+            console.log("Correo ya registrado");
+        }
+        const salto = bcrypt_1.default.genSaltSync();
+        const psswd = bcrypt_1.default.hashSync(password, salto);
+        const usuario = yield Usuario_1.default.create({ email, password: psswd });
+        return usuario;
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.crearUsuario = crearUsuario;

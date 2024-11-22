@@ -12,7 +12,7 @@ import personaRutas from "../routes/personaRoutes";
 import predioRutas from "../routes/predioRoutes";
 import trampaRutas from "../routes/trampaRoutes";
 import usuarioRutas from "../routes/usuarioRoutes";
-
+import funcionarioHasTrampaRutas from "../routes/funcionarioHasTrampaRoutes";
 
 class Server {
     private app: Application;
@@ -56,7 +56,6 @@ class Server {
         this.app.use(express.json());
         this.app.use(express.static("public"));
 
-
     }
 
     routes(){
@@ -68,8 +67,8 @@ class Server {
         this.app.use(this.apiPath.predios, predioRutas);
         this.app.use(this.apiPath.trampas, trampaRutas);
         this.app.use(this.apiPath.usuarios, usuarioRutas);
+        this.app.use(this.apiPath.funcionarios_has_trampas, funcionarioHasTrampaRutas);
     }
-
     listen(){
         this.app.listen(this.port, ()=>{
             console.log(`Servidor Conectado al puerto = ${this.port}`);

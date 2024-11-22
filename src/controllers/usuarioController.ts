@@ -88,3 +88,25 @@ export const deleteUsuario = async(req: Request, res:Response) =>{
   await usuario.destroy();
   res.json(usuario);
 }
+
+
+export const crearUsuario = async (email:string, password:string) => {
+  try {
+    const existeEmail = await Usuario.findOne({
+      where: {
+        email,
+      },
+    });
+    if (existeEmail) {
+      console.log("Correo ya registrado");
+    }
+    const salto = bcrypt.genSaltSync();
+    const psswd = bcrypt.hashSync(password, salto);
+    const usuario = await Usuario.create({ email, password: psswd });
+    
+    return usuario;
+  } catch (error) {
+    console.log(error);
+  }
+};
+

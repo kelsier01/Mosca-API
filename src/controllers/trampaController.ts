@@ -1,10 +1,24 @@
 import { Request, Response } from 'express';
 import Trampa from '../models/Trampa';
+import Predio from '../models/Predio';
+import Usuario from '../models/Usuario';
+import { crearUsuario } from '../controllers/usuarioController'
 
 export const getTrampas = async (req: Request, res: Response) => {
   try {
-    const trampa = await Trampa.findAll();
-    res.json(trampa);
+    const trampas = await Trampa.findAll({
+      include: [
+        {
+          model: Predio,
+          as: 'predio'
+        },
+        {
+          model: Usuario,
+          as: 'usuario'
+        },
+      ],
+    });
+    res.json(trampas);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener trampa', error });
   }
@@ -25,9 +39,16 @@ export const getTrampa = async (req: Request, res: Response) => {
 };
 
 export const postTrampa = async (req: Request, res: Response) => {
-  const { body } = req;
+  const { predio_id, direccion_mac, modelo, coordenadas } = req.body;
   try {
-    const newtrampa = await Trampa.create(body);
+    const nuevoUsuario = {
+      email: `${modelo}@etrap.com`,
+      password: modelo,
+    }
+
+    const { id: usuario_id }:any = await crearUsuario(nuevoUsuario.email, nuevoUsuario.password);
+
+    const newtrampa = await Trampa.create({predio_id, usuario_id, direccion_mac,modelo, coordenadas });
     res.json(newtrampa);
   } catch (error) {
     res.status(500).json({ message: 'Error al crear trampa', error });

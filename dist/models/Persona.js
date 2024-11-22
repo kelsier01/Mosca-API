@@ -33,7 +33,7 @@ const Persona = connection_1.default.define('personas', {
         defaultValue: 1,
     },
 });
-Persona.belongsTo(Usuario_1.default, { foreignKey: 'usuario_id' });
+Persona.belongsTo(Usuario_1.default, { foreignKey: 'usuario_id', as: 'usuario' });
 // Persona.hasOne(Duenio, { foreignKey: 'persona_id' });
 // Persona.hasOne(Funcionario, { foreignKey: 'persona_id' });
 exports.default = Persona;

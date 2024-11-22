@@ -25,8 +25,8 @@ const FuncionarioHasTrampa = bd.define('funcionarios_has_trampas', {
   },
 });
 
-FuncionarioHasTrampa.belongsTo(Funcionario, { foreignKey: 'funcionario_id' });
-FuncionarioHasTrampa.belongsTo(Trampa, { foreignKey: 'trampa_id' });
-FuncionarioHasTrampa.belongsTo(Rol, { foreignKey: 'rol_id' });
+FuncionarioHasTrampa.belongsTo(Funcionario, { as: 'funcionario', foreignKey: 'funcionario_id' });
+FuncionarioHasTrampa.belongsTo(Trampa, { as: 'trampa', foreignKey: 'trampa_id' });
+FuncionarioHasTrampa.belongsTo(Rol, { as:'rol', foreignKey: 'rol_id' });
 
 export default FuncionarioHasTrampa;

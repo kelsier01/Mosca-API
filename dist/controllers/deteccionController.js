@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDeteccion = exports.putDeteccion = exports.postDeteccion = exports.getDeteccion = exports.getDetecciones = void 0;
 const Deteccion_1 = __importDefault(require("../models/Deteccion"));
+const Alerta_1 = __importDefault(require("../models/Alerta"));
+const FuncionarioHasTrampa_1 = __importDefault(require("../models/FuncionarioHasTrampa"));
 const getDetecciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const detecciones = yield Deteccion_1.default.findAll();
@@ -41,10 +43,19 @@ const getDeteccion = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getDeteccion = getDeteccion;
 const postDeteccion = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
+    const { trampa_id } = req.body;
+    const funcionarios_has_trampas = yield FuncionarioHasTrampa_1.default.findAll({
+        where: { trampa_id }
+    });
     try {
         const newDeteccion = yield Deteccion_1.default.create(req.body);
-        res.json(newDeteccion);
+        const alerta = funcionarios_has_trampas.forEach((funcionario_has_trampa) => {
+            Alerta_1.default.create({
+                funcionario_id: funcionario_has_trampa.getDataValue('funcionario_id'),
+                deteccion_id: newDeteccion.getDataValue('id'),
+            });
+        });
+        res.json({ newDeteccion, alerta });
     }
     catch (error) {
         res.status(500).json({ message: 'Error al crear Deteccion', error });

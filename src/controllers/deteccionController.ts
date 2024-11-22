@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import Deteccion from '../models/Deteccion';
+import Alerta from '../models/Alerta';
+import FuncionarioHasTrampa from '../models/FuncionarioHasTrampa';
 
 export const getDetecciones = async (req: Request, res: Response) => {
   try {
@@ -25,10 +27,21 @@ export const getDeteccion = async (req: Request, res: Response) => {
 };
 
 export const postDeteccion = async (req: Request, res: Response) => {
-  const { body } = req;
+  const { trampa_id } = req.body;
+  const funcionarios_has_trampas = await FuncionarioHasTrampa.findAll({ 
+    where: { trampa_id }
+  });
   try {
     const newDeteccion = await Deteccion.create(req.body);
-    res.json(newDeteccion);
+
+    const alerta = funcionarios_has_trampas.forEach((funcionario_has_trampa)=>{
+      Alerta.create({
+        funcionario_id: funcionario_has_trampa.getDataValue('funcionario_id'),
+        deteccion_id: newDeteccion.getDataValue('id'),
+      });
+    });
+
+    res.json({newDeteccion, alerta});
   } catch (error) {
     res.status(500).json({ message: 'Error al crear Deteccion', error });
   }

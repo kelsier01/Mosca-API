@@ -14,13 +14,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFuncionario = exports.putFuncionario = exports.postFuncionario = exports.getFuncionario = exports.getFuncionarios = void 0;
 const Funcionario_1 = __importDefault(require("../models/Funcionario"));
+const Rol_1 = __importDefault(require("../models/Rol"));
+const Persona_1 = __importDefault(require("../models/Persona"));
+const Usuario_1 = __importDefault(require("../models/Usuario"));
+const usuarioController_1 = require("./usuarioController");
 const getFuncionarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const funcionario = yield Funcionario_1.default.findAll();
-        res.json(funcionario);
+        const funcionarios = yield Funcionario_1.default.findAll({
+            include: [
+                {
+                    model: Persona_1.default,
+                    as: 'persona',
+                    include: [
+                        {
+                            model: Usuario_1.default,
+                            as: 'usuario',
+                        },
+                    ],
+                },
+                {
+                    model: Rol_1.default,
+                    as: 'rol',
+                },
+            ],
+        });
+        res.json(funcionarios);
     }
     catch (error) {
-        res.status(500).json({ message: 'Error al obtener Funcionario', error });
+        res.status(500).json({ message: 'Error al obtener Funcionarios', error });
     }
 });
 exports.getFuncionarios = getFuncionarios;
@@ -41,9 +62,14 @@ const getFuncionario = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.getFuncionario = getFuncionario;
 const postFuncionario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
+    const { email, password, rut, nombre, apellido, telefono, rol } = req.body;
     try {
-        const newfuncionario = yield Funcionario_1.default.create(req.body);
+        //Crear usuario
+        const { id: usuario_id } = yield (0, usuarioController_1.crearUsuario)(email, password);
+        //Crear persona
+        const newPersona = yield Persona_1.default.create({ usuario_id, rut, nombre, apellido, telefono });
+        //Crear funcionario
+        const newfuncionario = yield Funcionario_1.default.create({ persona_id: newPersona.getDataValue('id'), rol_id: rol });
         res.json(newfuncionario);
     }
     catch (error) {

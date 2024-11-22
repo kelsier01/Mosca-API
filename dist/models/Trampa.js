@@ -34,8 +34,8 @@ const Trampa = connection_1.default.define('trampas', {
         defaultValue: 1,
     },
 });
-Trampa.belongsTo(Predio_1.default, { foreignKey: 'predio_id' });
-Trampa.belongsTo(Usuario_1.default, { foreignKey: 'usuario_id' });
+Trampa.belongsTo(Predio_1.default, { foreignKey: 'predio_id', as: 'predio' });
+Trampa.belongsTo(Usuario_1.default, { foreignKey: 'usuario_id', as: 'usuario' });
 // Trampa.hasMany(Deteccion, { foreignKey: 'trampa_id' });
 // Trampa.hasMany(FuncionarioHasTrampa, { foreignKey: 'trampa_id' });
 exports.default = Trampa;

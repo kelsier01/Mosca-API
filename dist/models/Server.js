@@ -25,6 +25,7 @@ const personaRoutes_1 = __importDefault(require("../routes/personaRoutes"));
 const predioRoutes_1 = __importDefault(require("../routes/predioRoutes"));
 const trampaRoutes_1 = __importDefault(require("../routes/trampaRoutes"));
 const usuarioRoutes_1 = __importDefault(require("../routes/usuarioRoutes"));
+const funcionarioHasTrampaRoutes_1 = __importDefault(require("../routes/funcionarioHasTrampaRoutes"));
 class Server {
     constructor() {
         this.apiPath = {
@@ -74,6 +75,7 @@ class Server {
         this.app.use(this.apiPath.predios, predioRoutes_1.default);
         this.app.use(this.apiPath.trampas, trampaRoutes_1.default);
         this.app.use(this.apiPath.usuarios, usuarioRoutes_1.default);
+        this.app.use(this.apiPath.funcionarios_has_trampas, funcionarioHasTrampaRoutes_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

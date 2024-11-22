@@ -15,15 +15,13 @@ const Funcionario = connection_1.default.define('funcionarios', {
     },
     rol_id: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
     },
     estado: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
     },
 });
-Funcionario.belongsTo(Persona_1.default, { foreignKey: 'persona_id' });
-Funcionario.belongsTo(Rol_1.default, { foreignKey: 'rol_id' });
+Funcionario.belongsTo(Persona_1.default, { foreignKey: 'persona_id', as: 'persona' });
+Funcionario.belongsTo(Rol_1.default, { foreignKey: 'rol_id', as: 'rol' });
 // Funcionario.hasMany(Alerta, { foreignKey: 'funcionario_id' });
 // Funcionario.hasMany(FuncionarioHasTrampa, { foreignKey: 'funcionario_id' });
 exports.default = Funcionario;

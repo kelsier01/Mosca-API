@@ -14,10 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTrampa = exports.putTrampa = exports.postTrampa = exports.getTrampa = exports.getTrampas = void 0;
 const Trampa_1 = __importDefault(require("../models/Trampa"));
+const Predio_1 = __importDefault(require("../models/Predio"));
+const Usuario_1 = __importDefault(require("../models/Usuario"));
+const usuarioController_1 = require("../controllers/usuarioController");
 const getTrampas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const trampa = yield Trampa_1.default.findAll();
-        res.json(trampa);
+        const trampas = yield Trampa_1.default.findAll({
+            include: [
+                {
+                    model: Predio_1.default,
+                    as: 'predio'
+                },
+                {
+                    model: Usuario_1.default,
+                    as: 'usuario'
+                },
+            ],
+        });
+        res.json(trampas);
     }
     catch (error) {
         res.status(500).json({ message: 'Error al obtener trampa', error });
@@ -41,9 +55,14 @@ const getTrampa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTrampa = getTrampa;
 const postTrampa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
+    const { predio_id, direccion_mac, modelo, coordenadas } = req.body;
     try {
-        const newtrampa = yield Trampa_1.default.create(body);
+        const nuevoUsuario = {
+            email: `${modelo}@etrap.com`,
+            password: modelo,
+        };
+        const { id: usuario_id } = yield (0, usuarioController_1.crearUsuario)(nuevoUsuario.email, nuevoUsuario.password);
+        const newtrampa = yield Trampa_1.default.create({ predio_id, usuario_id, direccion_mac, modelo, coordenadas });
         res.json(newtrampa);
     }
     catch (error) {
