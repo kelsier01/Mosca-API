@@ -16,6 +16,7 @@ exports.deleteDeteccion = exports.putDeteccion = exports.postDeteccion = exports
 const Deteccion_1 = __importDefault(require("../models/Deteccion"));
 const Alerta_1 = __importDefault(require("../models/Alerta"));
 const FuncionarioHasTrampa_1 = __importDefault(require("../models/FuncionarioHasTrampa"));
+const Server_1 = __importDefault(require("../models/Server"));
 const getDetecciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const detecciones = yield Deteccion_1.default.findAll();
@@ -55,6 +56,9 @@ const postDeteccion = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 deteccion_id: newDeteccion.getDataValue('id'),
             });
         });
+        // Notificar a los clientes WebSocket
+        const server = Server_1.default.getInstance(); // Obtén la instancia del servidor
+        server.notifyClients("nuevaAlerta", newDeteccion);
         res.json({ newDeteccion, alerta });
     }
     catch (error) {

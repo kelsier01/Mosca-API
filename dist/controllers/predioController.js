@@ -14,9 +14,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePredio = exports.putPredio = exports.postPredio = exports.getPredio = exports.getPredios = void 0;
 const Predio_1 = __importDefault(require("../models/Predio"));
+const Duenio_1 = __importDefault(require("../models/Duenio"));
+const Persona_1 = __importDefault(require("../models/Persona"));
+const Usuario_1 = __importDefault(require("../models/Usuario"));
 const getPredios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const predios = yield Predio_1.default.findAll();
+        const predios = yield Predio_1.default.findAll({
+            include: [{
+                    model: Duenio_1.default,
+                    as: 'duenio',
+                    include: [
+                        {
+                            model: Persona_1.default,
+                            as: 'persona',
+                            include: [
+                                {
+                                    model: Usuario_1.default,
+                                    as: 'usuario',
+                                }
+                            ],
+                        },
+                    ],
+                }],
+        });
         res.json(predios);
     }
     catch (error) {

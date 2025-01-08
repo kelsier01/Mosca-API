@@ -21,6 +21,6 @@ const Predio = connection_1.default.define('predios', {
         defaultValue: 1,
     },
 });
-Predio.belongsTo(Duenio_1.default, { foreignKey: 'duenio_id' });
+Predio.belongsTo(Duenio_1.default, { as: 'duenio', foreignKey: 'duenio_id' });
 // Predio.hasMany(Trampa, { foreignKey: 'predio_id' });
 exports.default = Predio;

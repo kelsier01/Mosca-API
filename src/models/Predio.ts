@@ -19,6 +19,6 @@ const Predio = bd.define('predios',{
   },
 });
 
-Predio.belongsTo(Duenio, { foreignKey: 'duenio_id' });
+Predio.belongsTo(Duenio, { as:'duenio', foreignKey: 'duenio_id' });
 // Predio.hasMany(Trampa, { foreignKey: 'predio_id' });
 export default Predio;

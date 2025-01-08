@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Deteccion from '../models/Deteccion';
 import Alerta from '../models/Alerta';
 import FuncionarioHasTrampa from '../models/FuncionarioHasTrampa';
+import Server from '../models/Server';
 
 export const getDetecciones = async (req: Request, res: Response) => {
   try {
@@ -40,6 +41,11 @@ export const postDeteccion = async (req: Request, res: Response) => {
         deteccion_id: newDeteccion.getDataValue('id'),
       });
     });
+
+    // Notificar a los clientes WebSocket
+    const server = Server.getInstance(); // Obtén la instancia del servidor
+    server.notifyClients("nuevaAlerta", newDeteccion);
+
 
     res.json({newDeteccion, alerta});
   } catch (error) {

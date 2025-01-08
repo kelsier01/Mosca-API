@@ -18,6 +18,6 @@ const Duenio = connection_1.default.define('duenios', {
         defaultValue: 1,
     },
 });
-Duenio.belongsTo(Persona_1.default, { foreignKey: 'persona_id' });
+Duenio.belongsTo(Persona_1.default, { as: 'persona', foreignKey: 'persona_id' });
 // Duenio.hasMany(Predio, { foreignKey: 'duenio_id' });
 exports.default = Duenio;

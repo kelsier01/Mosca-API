@@ -17,7 +17,6 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const Usuario_1 = __importDefault(require("./../models/Usuario"));
 const Trampa_1 = __importDefault(require("./../models/Trampa"));
 const FuncionarioHasTrampa_1 = __importDefault(require("../models/FuncionarioHasTrampa"));
-const generarJWT_1 = require("../helpers/generarJWT");
 //Recibe las peticiones request y response
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //recibe una request
@@ -54,16 +53,16 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //Si todos los datos ya fueron validados y confirmamos que son los correspondientes
         //Entonces definimos 
         //name e id como variables con el valor extraido del objeto user con atributos del mismo nombre, eso se llama destructuring
-        const { name, id } = user;
+        // const { name, id } = user;
         // Crearemos un payload con los valores de name y id, esto esta encriptado
-        const payload = { name, id };
+        // const payload = { name, id };
         //Creamos un token con el payload creado
-        const token = yield (0, generarJWT_1.generarjwt)(payload);
+        // const token = await generarjwt(payload);
         //Con el token podemos realizar una response desde la api
         res.status(200).json({
             msg: "login Ok",
-            user,
-            token,
+            user
+            // token,
         });
     }
     catch (error) {
@@ -106,11 +105,11 @@ const login_trampa = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         //Si todos los datos ya fueron validados y confirmamos que son los correspondientes
         //Entonces definimos 
         //name e id como variables con el valor extraido del objeto user con atributos del mismo nombre, eso se llama destructuring
-        const { name, id } = user;
+        // const { name, id } = user;
         // Crearemos un payload con los valores de name y id, esto esta encriptado
-        const payload = { name, id };
+        // const payload = { name, id };
         //Creamos un token con el payload creado
-        const token = yield (0, generarJWT_1.generarjwt)(payload);
+        // const token = await generarjwt(payload);
         //Con el token podemos realizar una response desde la api
         const trap = yield Trampa_1.default.findOne({
             where: {

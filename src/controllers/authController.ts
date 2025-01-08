@@ -3,8 +3,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import Users from "./../models/Usuario";
 import Trampas from "./../models/Trampa";
-import FuncionariosHasTrampa from "../models/FuncionarioHasTrampa"
-import { generarjwt } from "../helpers/generarJWT";
+import FuncionariosHasTrampa from "../models/FuncionarioHasTrampa";
 
 //Recibe las peticiones request y response
 export const login = async (req: Request, res: Response) => {
@@ -44,17 +43,17 @@ export const login = async (req: Request, res: Response) => {
     //Si todos los datos ya fueron validados y confirmamos que son los correspondientes
     //Entonces definimos 
     //name e id como variables con el valor extraido del objeto user con atributos del mismo nombre, eso se llama destructuring
-    const { name, id } = user;
+    // const { name, id } = user;
     // Crearemos un payload con los valores de name y id, esto esta encriptado
-    const payload = { name, id };
+    // const payload = { name, id };
     //Creamos un token con el payload creado
-    const token = await generarjwt(payload);
+    // const token = await generarjwt(payload);
     //Con el token podemos realizar una response desde la api
 
     res.status(200).json({
       msg: "login Ok",
-      user,
-      token,
+      user
+      // token,
     });
   } catch (error) {
     console.log(error);
@@ -98,11 +97,11 @@ export const login_trampa = async (req: Request, res: Response) =>{
     //Si todos los datos ya fueron validados y confirmamos que son los correspondientes
     //Entonces definimos 
     //name e id como variables con el valor extraido del objeto user con atributos del mismo nombre, eso se llama destructuring
-    const { name, id } = user;
+    // const { name, id } = user;
     // Crearemos un payload con los valores de name y id, esto esta encriptado
-    const payload = { name, id };
+    // const payload = { name, id };
     //Creamos un token con el payload creado
-    const token = await generarjwt(payload);
+    // const token = await generarjwt(payload);
     //Con el token podemos realizar una response desde la api
 
     const trap:any = await Trampas.findOne({

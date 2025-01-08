@@ -17,7 +17,7 @@ const Duenio = bd.define('duenios',{
   },
 });
 
-Duenio.belongsTo(Persona, { foreignKey: 'persona_id' });
+Duenio.belongsTo(Persona, { as:'persona', foreignKey: 'persona_id' });
 // Duenio.hasMany(Predio, { foreignKey: 'duenio_id' });
 
 export default Duenio;

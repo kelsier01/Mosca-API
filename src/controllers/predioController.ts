@@ -1,9 +1,28 @@
 import { Request, Response } from 'express';
 import Predio from "../models/Predio"
+import Duenio from '../models/Duenio';
+import Persona from '../models/Persona';
+import Usuario from '../models/Usuario';
 
 export const getPredios = async (req: Request, res: Response) => {
   try {
-    const predios = await Predio.findAll();
+    const predios = await Predio.findAll({
+      include: [{
+        model: Duenio,
+        as: 'duenio',
+        include: [
+          {
+            model: Persona,
+            as: 'persona',
+            include: [
+              {
+                model: Usuario,
+                as: 'usuario',
+              }],
+          },
+        ],
+      }],
+    });
     res.json(predios);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener personas', error });

@@ -6,5 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const Server_1 = __importDefault(require("./models/Server"));
-const server = new Server_1.default();
+//Obtenemos la instancia del servidor
+const server = Server_1.default.getInstance();
 server.listen();
