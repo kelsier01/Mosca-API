@@ -5,6 +5,7 @@ import bodyParser from "body-parser"; // Importa body-parser
 import http from "http";
 import WebSocket from "ws";
 
+
 //Rutas
 import alertaRutas from "../routes/alertaRoutes";
 import authRutas from "../routes/authRoutes";
@@ -49,6 +50,8 @@ class Server {
         this.routes();
         this.configureWebSocket();
     }
+
+    
 
     // Método estático para obtener la instancia única del servidor
     public static getInstance(): Server {
