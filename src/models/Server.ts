@@ -2,9 +2,9 @@ import express,  { Application } from "express";
 import db from "../bd/connection";
 import cors from "cors";
 import bodyParser from "body-parser"; // Importa body-parser
-import https from "https";
+import http from "http";
 import WebSocket from "ws";
-import fs from "fs";
+
 
 
 //Rutas
@@ -21,7 +21,7 @@ import funcionarioHasTrampaRutas from "../routes/funcionarioHasTrampaRoutes";
 class Server {
     private static instance: Server;
     private app: Application;
-    private server: https.Server;
+    private server: http.Server;
     private wss: WebSocket.Server;
     private port: string;
     private apiPath = {
@@ -38,17 +38,12 @@ class Server {
         trampas: "/api/trampas",
         usuarios: "/api/usuarios"
     };
-    private options = {
-        key: fs.readFileSync("src/ssl/key.pem"),
-        cert: fs.readFileSync("src/ssl/cert.pem")
-    };
-
 
     constructor(){
         this.app = express();
-        this.server = https.createServer(this.options, this.app); // Crea el servidor HTTP
+        this.server = http.createServer(this.app); // Crea el servidor HTTP
         this.wss = new WebSocket.Server({ server: this.server }); // Crea el servidor de WebSockets
-        this.port = process.env.PORT || "8888";
+        this.port = process.env.PORT || "8080";
         this.app.use(bodyParser.json({ limit: '50mb' }));
         this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
         this.bdConnection();

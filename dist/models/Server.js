@@ -16,9 +16,8 @@ const express_1 = __importDefault(require("express"));
 const connection_1 = __importDefault(require("../bd/connection"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser")); // Importa body-parser
-const https_1 = __importDefault(require("https"));
+const http_1 = __importDefault(require("http"));
 const ws_1 = __importDefault(require("ws"));
-const fs_1 = __importDefault(require("fs"));
 //Rutas
 const alertaRoutes_1 = __importDefault(require("../routes/alertaRoutes"));
 const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
@@ -45,14 +44,10 @@ class Server {
             trampas: "/api/trampas",
             usuarios: "/api/usuarios"
         };
-        this.options = {
-            key: fs_1.default.readFileSync("src/ssl/key.pem"),
-            cert: fs_1.default.readFileSync("src/ssl/cert.pem")
-        };
         this.app = (0, express_1.default)();
-        this.server = https_1.default.createServer(this.options, this.app); // Crea el servidor HTTP
+        this.server = http_1.default.createServer(this.app); // Crea el servidor HTTP
         this.wss = new ws_1.default.Server({ server: this.server }); // Crea el servidor de WebSockets
-        this.port = process.env.PORT || "8888";
+        this.port = process.env.PORT || "8080";
         this.app.use(body_parser_1.default.json({ limit: '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
         this.bdConnection();
