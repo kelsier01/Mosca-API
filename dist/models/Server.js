@@ -16,8 +16,8 @@ const express_1 = __importDefault(require("express"));
 const connection_1 = __importDefault(require("../bd/connection"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser")); // Importa body-parser
-const http_1 = __importDefault(require("http"));
-const ws_1 = __importDefault(require("ws"));
+const http_1 = __importDefault(require("http")); // Importa módulo http de Node.js
+const socket_io_1 = require("socket.io"); // Importa Server y Socket de socket.io
 //Rutas
 const alertaRoutes_1 = __importDefault(require("../routes/alertaRoutes"));
 const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
@@ -46,14 +46,19 @@ class Server {
         };
         this.app = (0, express_1.default)();
         this.server = http_1.default.createServer(this.app); // Crea el servidor HTTP
-        this.wss = new ws_1.default.Server({ server: this.server }); // Crea el servidor de WebSockets
+        this.io = new socket_io_1.Server(this.server, {
+            cors: {
+                origin: "*",
+                methods: ["GET", "POST"],
+            },
+        }); // Crea el servidor de WebSockets
         this.port = process.env.PORT || "8080";
         this.app.use(body_parser_1.default.json({ limit: '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
         this.bdConnection();
         this.middlewares();
         this.routes();
-        this.configureWebSocket();
+        this.configureSocketIO();
     }
     // Método estático para obtener la instancia única del servidor
     static getInstance() {
@@ -89,28 +94,26 @@ class Server {
         this.app.use(this.apiPath.usuarios, usuarioRoutes_1.default);
         this.app.use(this.apiPath.funcionarios_has_trampas, funcionarioHasTrampaRoutes_1.default);
     }
-    // Configurar WebSocket
-    configureWebSocket() {
-        console.log("Configurando WebSocket");
-        this.wss.on("connection", (ws) => {
-            console.log("Nuevo cliente WebSocket conectado");
-            // Escuchar mensajes del cliente (opcional)
-            ws.on("message", (message) => {
-                console.log("Mensaje recibido:", message.toString());
+    // Configura socket.io
+    configureSocketIO() {
+        console.log("Configurando Socket.IO");
+        this.io.on("connection", (socket) => {
+            console.log("Nuevo cliente conectado:", socket.id);
+            // Escuchar eventos personalizados
+            socket.on("chat message", (msg) => {
+                console.log("Mensaje recibido:", msg);
+                // Emitir el mensaje a todos los clientes
+                this.io.emit("chat message", msg);
             });
-            // Manejar cierre de conexión
-            ws.on("close", () => {
-                console.log("Cliente WebSocket desconectado");
+            // Manejar desconexión
+            socket.on("disconnect", () => {
+                console.log("Cliente desconectado:", socket.id);
             });
         });
     }
-    // Método para notificar a todos los clientes WebSocket
-    notifyClients(tipo, data) {
-        this.wss.clients.forEach((client) => {
-            if (client.readyState === ws_1.default.OPEN) {
-                client.send(JSON.stringify({ tipo, data }));
-            }
-        });
+    // Método para notificar a todos los clientes
+    notifyClients(event, data) {
+        this.io.emit(event, data); // Emitir un evento a todos los clientes conectados
     }
     listen() {
         this.server.listen(this.port, () => {
