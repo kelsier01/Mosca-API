@@ -61,13 +61,17 @@ const getPredio = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getPredio = getPredio;
 const postPredio = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
+    const { duenio_id, direccion, estado } = req.body;
     try {
-        const newpredio = yield Predio_1.default.create(body);
+        const newpredio = yield Predio_1.default.create({
+            duenio_id,
+            direccion,
+            estado
+        });
         res.json(newpredio);
     }
     catch (error) {
-        res.status(500).json({ message: 'Error al crear newpredio', error });
+        res.status(500).json({ message: 'Error al crear nuevo pedido', error });
     }
 });
 exports.postPredio = postPredio;

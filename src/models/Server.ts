@@ -4,8 +4,8 @@ import cors from "cors";
 import bodyParser from "body-parser"; // Importa body-parser
 import http from "http"; // Importa módulo http de Node.js
 import { Server as SocketIOServer, Socket } from "socket.io"; // Importa Server y Socket de socket.io
-
-
+import firebase_app from "../firebase/firebase.config";
+import { getFirestore } from "firebase/firestore";
 
 //Rutas
 import alertaRutas from "../routes/alertaRoutes";
@@ -17,6 +17,7 @@ import predioRutas from "../routes/predioRoutes";
 import trampaRutas from "../routes/trampaRoutes";
 import usuarioRutas from "../routes/usuarioRoutes";
 import funcionarioHasTrampaRutas from "../routes/funcionarioHasTrampaRoutes";
+import duenioRutas from "../routes/duenioRoutes";
 
 class Server {
     private static instance: Server;
@@ -24,6 +25,7 @@ class Server {
     private server: http.Server;
     private io: SocketIOServer;
     private port: string;
+    private firebase: typeof firebase_app;
     private apiPath = {
         alertas: "/api/alertas",
         login: "/api/auth",
@@ -49,12 +51,33 @@ class Server {
             },
         }); // Crea el servidor de WebSockets
         this.port = process.env.PORT || "8080";
+        this.firebase = firebase_app; // Inicializa Firebase
         this.app.use(bodyParser.json({ limit: '50mb' }));
         this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
         this.bdConnection();
         this.middlewares();
         this.routes();
         this.configureSocketIO();
+        this.initFirebase(); // Inicializa Firebase
+    }
+
+    // Método para inicializar Firebase
+    private initFirebase(){
+        try {
+            // Inicializa los servicios que necesitas
+            const firestore = getFirestore(this.firebase);
+
+            console.log('Firebase Admin SDK inicializado correctamente');
+            
+            // Opcional: Verifica la conexión a Firestore
+            console.log('Instancia de Firestore disponible:', !!firestore);
+        } catch (error: any) {
+            console.error('Error al inicializar Firebase:', error);
+        }  
+    }
+
+    public getFirebase() {
+        return this.firebase;
     }
 
     
@@ -93,6 +116,7 @@ class Server {
         this.app.use(this.apiPath.trampas, trampaRutas);
         this.app.use(this.apiPath.usuarios, usuarioRutas);
         this.app.use(this.apiPath.funcionarios_has_trampas, funcionarioHasTrampaRutas);
+        this.app.use(this.apiPath.duenios, duenioRutas);
     }
 
      // Configura socket.io

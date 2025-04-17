@@ -3,6 +3,7 @@ import Deteccion from '../models/Deteccion';
 import Alerta from '../models/Alerta';
 import FuncionarioHasTrampa from '../models/FuncionarioHasTrampa';
 import Server from '../models/Server';
+import { doc, getDoc, getFirestore, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 export const getDetecciones = async (req: Request, res: Response) => {
   try {
@@ -43,10 +44,24 @@ export const postDeteccion = async (req: Request, res: Response) => {
     });
 
     // Notificar a los clientes WebSocket
-    const server = Server.getInstance(); // Obtén la instancia del servidor
-    server.notifyClients("nuevaAlerta", newDeteccion);
+    // const server = Server.getInstance(); // Obtén la instancia del servidor
+    // server.notifyClients("nuevaAlerta", newDeteccion);
 
+    const server = Server.getInstance();
+    try{
+      const db = getFirestore(server.getFirebase());
+      
+      const updatesRef = doc(db, "updates", "lista");
+      const docSnap = await getDoc(updatesRef);
 
+      if(docSnap.exists()){
+        await updateDoc(updatesRef, {
+          ultima_deteccion: serverTimestamp()
+        });
+      }
+    }catch(firestoreError){
+      console.error("Error al actualizar Firestore:", firestoreError);
+    }
     res.json({newDeteccion, alerta});
   } catch (error) {
     res.status(500).json({ message: 'Error al crear Deteccion', error });

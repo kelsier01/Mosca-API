@@ -56,7 +56,7 @@ export const postFuncionario = async (req: Request, res: Response) => {
     const newPersona = await Persona.create({ usuario_id, rut, nombre, apellido, telefono });
 
     //Crear funcionario
-    const newfuncionario = await Funcionario.create({ persona_id: newPersona.getDataValue('id'), rol_id: rol });
+    const newfuncionario = await Funcionario.create({ persona_id: newPersona.getDataValue('id'), rol_id: rol, estado: 1 });
 
     res.json(newfuncionario);
   } catch (error) {

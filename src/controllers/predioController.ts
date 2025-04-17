@@ -44,12 +44,16 @@ export const getPredio = async (req: Request, res: Response) => {
 };
 
 export const postPredio = async (req: Request, res: Response) => {
-  const { body } = req;
+  const { duenio_id, direccion, estado } = req.body;
   try {
-    const newpredio = await Predio.create(body);
+    const newpredio = await Predio.create({
+      duenio_id,
+      direccion,
+      estado
+    });
     res.json(newpredio);
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear newpredio', error });
+    res.status(500).json({ message: 'Error al crear nuevo pedido', error });
   }
 };
 

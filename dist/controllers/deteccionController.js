@@ -17,6 +17,7 @@ const Deteccion_1 = __importDefault(require("../models/Deteccion"));
 const Alerta_1 = __importDefault(require("../models/Alerta"));
 const FuncionarioHasTrampa_1 = __importDefault(require("../models/FuncionarioHasTrampa"));
 const Server_1 = __importDefault(require("../models/Server"));
+const firestore_1 = require("firebase/firestore");
 const getDetecciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const detecciones = yield Deteccion_1.default.findAll();
@@ -57,8 +58,22 @@ const postDeteccion = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
         });
         // Notificar a los clientes WebSocket
-        const server = Server_1.default.getInstance(); // Obtén la instancia del servidor
-        server.notifyClients("nuevaAlerta", newDeteccion);
+        // const server = Server.getInstance(); // Obtén la instancia del servidor
+        // server.notifyClients("nuevaAlerta", newDeteccion);
+        const server = Server_1.default.getInstance();
+        try {
+            const db = (0, firestore_1.getFirestore)(server.getFirebase());
+            const updatesRef = (0, firestore_1.doc)(db, "updates", "lista");
+            const docSnap = yield (0, firestore_1.getDoc)(updatesRef);
+            if (docSnap.exists()) {
+                yield (0, firestore_1.updateDoc)(updatesRef, {
+                    ultima_deteccion: (0, firestore_1.serverTimestamp)()
+                });
+            }
+        }
+        catch (firestoreError) {
+            console.error("Error al actualizar Firestore:", firestoreError);
+        }
         res.json({ newDeteccion, alerta });
     }
     catch (error) {

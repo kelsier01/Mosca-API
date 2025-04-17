@@ -1,8 +1,8 @@
 // import Users from "../models/usuario";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import Users from "./../models/Usuario";
-import Trampas from "./../models/Trampa";
+import Users from "../models/Usuario";
+import Trampas from "../models/Trampa";
 import FuncionariosHasTrampa from "../models/FuncionarioHasTrampa";
 
 //Recibe las peticiones request y response

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import Users from "./../models/Usuario";
+import Users from "../models/Usuario";
 
 export const validarjwt = async (
   req: Request | any,

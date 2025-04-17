@@ -69,7 +69,7 @@ const postFuncionario = (req, res) => __awaiter(void 0, void 0, void 0, function
         //Crear persona
         const newPersona = yield Persona_1.default.create({ usuario_id, rut, nombre, apellido, telefono });
         //Crear funcionario
-        const newfuncionario = yield Funcionario_1.default.create({ persona_id: newPersona.getDataValue('id'), rol_id: rol });
+        const newfuncionario = yield Funcionario_1.default.create({ persona_id: newPersona.getDataValue('id'), rol_id: rol, estado: 1 });
         res.json(newfuncionario);
     }
     catch (error) {

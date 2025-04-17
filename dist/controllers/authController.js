@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login_trampa = exports.login = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const Usuario_1 = __importDefault(require("./../models/Usuario"));
-const Trampa_1 = __importDefault(require("./../models/Trampa"));
+const Usuario_1 = __importDefault(require("../models/Usuario"));
+const Trampa_1 = __importDefault(require("../models/Trampa"));
 const FuncionarioHasTrampa_1 = __importDefault(require("../models/FuncionarioHasTrampa"));
 //Recibe las peticiones request y response
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

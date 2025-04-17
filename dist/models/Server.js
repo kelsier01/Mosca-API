@@ -18,6 +18,8 @@ const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser")); // Importa body-parser
 const http_1 = __importDefault(require("http")); // Importa módulo http de Node.js
 const socket_io_1 = require("socket.io"); // Importa Server y Socket de socket.io
+const firebase_config_1 = __importDefault(require("../firebase/firebase.config"));
+const firestore_1 = require("firebase/firestore");
 //Rutas
 const alertaRoutes_1 = __importDefault(require("../routes/alertaRoutes"));
 const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
@@ -28,6 +30,7 @@ const predioRoutes_1 = __importDefault(require("../routes/predioRoutes"));
 const trampaRoutes_1 = __importDefault(require("../routes/trampaRoutes"));
 const usuarioRoutes_1 = __importDefault(require("../routes/usuarioRoutes"));
 const funcionarioHasTrampaRoutes_1 = __importDefault(require("../routes/funcionarioHasTrampaRoutes"));
+const duenioRoutes_1 = __importDefault(require("../routes/duenioRoutes"));
 class Server {
     constructor() {
         this.apiPath = {
@@ -53,12 +56,30 @@ class Server {
             },
         }); // Crea el servidor de WebSockets
         this.port = process.env.PORT || "8080";
+        this.firebase = firebase_config_1.default; // Inicializa Firebase
         this.app.use(body_parser_1.default.json({ limit: '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
         this.bdConnection();
         this.middlewares();
         this.routes();
         this.configureSocketIO();
+        this.initFirebase(); // Inicializa Firebase
+    }
+    // Método para inicializar Firebase
+    initFirebase() {
+        try {
+            // Inicializa los servicios que necesitas
+            const firestore = (0, firestore_1.getFirestore)(this.firebase);
+            console.log('Firebase Admin SDK inicializado correctamente');
+            // Opcional: Verifica la conexión a Firestore
+            console.log('Instancia de Firestore disponible:', !!firestore);
+        }
+        catch (error) {
+            console.error('Error al inicializar Firebase:', error);
+        }
+    }
+    getFirebase() {
+        return this.firebase;
     }
     // Método estático para obtener la instancia única del servidor
     static getInstance() {
@@ -93,6 +114,7 @@ class Server {
         this.app.use(this.apiPath.trampas, trampaRoutes_1.default);
         this.app.use(this.apiPath.usuarios, usuarioRoutes_1.default);
         this.app.use(this.apiPath.funcionarios_has_trampas, funcionarioHasTrampaRoutes_1.default);
+        this.app.use(this.apiPath.duenios, duenioRoutes_1.default);
     }
     // Configura socket.io
     configureSocketIO() {
