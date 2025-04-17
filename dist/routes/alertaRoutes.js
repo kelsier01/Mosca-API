@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const alertaController = __importStar(require("../controllers/alertaController"));
 const router = (0, express_1.Router)();
+router.get('/online', (req, res) => { res.status(200).json({ message: 'API Alertas Online' }); });
 router.get('/', alertaController.getAlertas);
 router.get('/:id', alertaController.getAlerta);
 router.post('/', alertaController.postAlerta);
